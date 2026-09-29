@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'vn.fit'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    jerseyVersion = '3.1.5'
+    weldVersion = '5.1.2.Final'
+    junitVersion = '5.10.0'
+}
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    // Servlet API cho Tomcat 10 / 11
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+    // CDI API
+    compileOnly 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.0.1'
+
+    // Weld Servlet cho CDI trên Tomcat
+    implementation "org.jboss.weld.servlet:weld-servlet-core:${weldVersion}"
+
+    // Jersey REST Engine, HK2 & JSON Jackson binding
+    implementation "org.glassfish.jersey.containers:jersey-container-servlet:${jerseyVersion}"
+    implementation "org.glassfish.jersey.inject:jersey-hk2:${jerseyVersion}"
+    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}"
+
+    // Jackson JSR310 cho java.time.LocalDate / LocalDateTime
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
+
+    // MariaDB & MySQL Connectors
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
+    implementation 'com.mysql:mysql-connector-j:9.1.0'
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
